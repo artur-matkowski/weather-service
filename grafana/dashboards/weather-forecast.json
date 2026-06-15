@@ -1,0 +1,252 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_OPENMETEO",
+      "label": "Open-Meteo Cache",
+      "description": "Infinity datasource pointing at the Open-Meteo cache",
+      "type": "datasource",
+      "pluginId": "yesoreyeram-infinity-datasource",
+      "pluginName": "Infinity"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "yesoreyeram-infinity-datasource",
+      "name": "Infinity",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "legend": { "calcs": ["min", "max", "mean"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "title": "Temperature (2 m)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "timeseries",
+          "url": "https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.temperature_2m).{ 'time': $[0], 'temperature': $[1] }\"\n| extend \"time\"=todatetime(\"time\")",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "drawStyle": "bars",
+            "fillOpacity": 70,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "normal" }
+          },
+          "unit": "lengthmm"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "snowfall" },
+            "properties": [{ "id": "unit", "value": "lengthcm" }]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "options": {
+        "legend": { "calcs": ["sum", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "title": "Precipitation — rain + snowfall",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "timeseries",
+          "url": "https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.rain, hourly.snowfall).{ 'time': $[0], 'rain': $[1], 'snowfall': $[2] }\"\n| extend \"time\"=todatetime(\"time\")",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "max": 100,
+          "min": 0,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 3,
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "title": "Cloud cover",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "timeseries",
+          "url": "https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.cloud_cover).{ 'time': $[0], 'clouds': $[1] }\"\n| extend \"time\"=todatetime(\"time\")",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "velocitykmh"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "wind_direction" },
+            "properties": [
+              { "id": "unit", "value": "degree" },
+              { "id": "custom.axisPlacement", "value": "right" },
+              { "id": "custom.drawStyle", "value": "points" },
+              { "id": "custom.showPoints", "value": "always" }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 4,
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "title": "Wind — speed & direction (10 m)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "timeseries",
+          "url": "https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.wind_speed_10m, hourly.wind_direction_10m).{ 'time': $[0], 'wind_speed': $[1], 'wind_direction': $[2] }\"\n| extend \"time\"=todatetime(\"time\")",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    }
+  ],
+  "refresh": "30m",
+  "schemaVersion": 39,
+  "tags": ["weather", "open-meteo"],
+  "templating": { "list": [] },
+  "time": { "from": "now", "to": "now+7d" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Weather Forecast (Open-Meteo, 7-day hourly)",
+  "uid": "openmeteo-weather",
+  "version": 1,
+  "weekStart": ""
+}

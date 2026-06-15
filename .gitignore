@@ -1,0 +1,11 @@
+# Secrets / local overrides
+.env
+.env.*
+!.env.example
+*.local
+
+# Editor / OS cruft
+.idea/
+.vscode/
+*.swp
+.DS_Store

@@ -1,0 +1,6 @@
+.git
+.gitignore
+.env
+docs
+grafana
+README.md

@@ -1,0 +1,35 @@
+# weather-cache — Open-Meteo caching reverse proxy.
+#
+# Deploy on the SAME host as your Nginx Proxy Manager instance so NPM can reach
+# this container by name (`weather-cache:8080`) over the shared nginx_proxy_net.
+#
+# Quickstart:  docker compose up -d
+# Local test:  uncomment the `ports:` block, then see README / docs/nginx-caching.md.
+
+services:
+  weather-cache:
+    image: nginx:1.27-alpine
+    container_name: weather-cache
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - openmeteo_cache:/var/cache/nginx/openmeteo   # persist cache across restarts
+    networks:
+      - nginx_proxy_net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    # Uncomment for direct LAN access / local testing (NPM does not need this —
+    # it reaches the container by name on nginx_proxy_net):
+    # ports:
+    #   - "8080:8080"
+
+volumes:
+  openmeteo_cache:
+
+networks:
+  nginx_proxy_net:
+    # Created once on the host:  docker network create nginx_proxy_net
+    external: true

@@ -1,0 +1,27 @@
+# Grafana datasource provisioning for the Open-Meteo cache.
+#
+# Use this ONLY if you self-host Grafana and mount provisioning files. For the
+# existing managed/off-site Grafana, add the datasource via the UI instead
+# (see docs/grafana-setup.md).
+#
+# Requires the Infinity plugin. Install it with, e.g.:
+#   GF_INSTALL_PLUGINS=yesoreyeram-infinity-datasource
+# or:  grafana cli plugins install yesoreyeram-infinity-datasource
+#
+# Drop this file in Grafana's provisioning/datasources/ directory.
+
+apiVersion: 1
+
+datasources:
+  - name: Open-Meteo Cache
+    type: yesoreyeram-infinity-datasource
+    uid: openmeteo-cache
+    access: proxy
+    isDefault: false
+    editable: true
+    jsonData:
+      # The cache requires no auth. Each panel uses an absolute URL, so no
+      # base URL is strictly needed; set one here if you prefer relative URLs.
+      # allowedHosts:
+      #   - https://weather.example.com
+      timeoutInSeconds: 20
