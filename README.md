@@ -65,8 +65,7 @@ curl -s -D - "$URL" -o /dev/null | grep -i x-cache-status   # 2nd request -> HIT
 nginx/nginx.conf                              # the cache (proxy_cache) — core of the service
 docker-compose.yml                            # weather-cache container on nginx_proxy_net
 .env.example                                  # canonical values (location, TTL, hostname)
-grafana/provisioning/datasources/infinity.yaml  # datasource (for self-hosted Grafana)
-grafana/dashboards/weather-forecast.json         # importable 4-panel dashboard
+grafana/dashboards/weather-forecast.json      # importable 4-panel dashboard
 docs/                                         # nginx / NPM / Grafana guides
 ```
 

@@ -39,6 +39,27 @@
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
         "type": "dashboard"
+      },
+      {
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(255, 193, 7, 0.18)",
+        "name": "Daylight",
+        "target": {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "Anno",
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&daily=sunrise,sunset&forecast_days=7&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"$zip(daily.sunrise, daily.sunset).{ 'time': $[0], 'timeEnd': $[1], 'text': 'Daylight' }\"\n| extend \"time\"=todatetime(\"time\")\n| extend \"timeEnd\"=todatetime(\"timeEnd\")",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
       }
     ]
   },
@@ -81,7 +102,7 @@
           "type": "json",
           "source": "url",
           "format": "timeseries",
-          "url": "https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&daily=sunrise,sunset&forecast_days=7&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
           "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.temperature_2m).{ 'time': $[0], 'temperature': $[1] }\"\n| extend \"time\"=todatetime(\"time\")",
@@ -129,7 +150,7 @@
           "type": "json",
           "source": "url",
           "format": "timeseries",
-          "url": "https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&daily=sunrise,sunset&forecast_days=7&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
           "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.rain, hourly.snowfall).{ 'time': $[0], 'rain': $[1], 'snowfall': $[2] }\"\n| extend \"time\"=todatetime(\"time\")",
@@ -174,7 +195,7 @@
           "type": "json",
           "source": "url",
           "format": "timeseries",
-          "url": "https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&daily=sunrise,sunset&forecast_days=7&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
           "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.cloud_cover).{ 'time': $[0], 'clouds': $[1] }\"\n| extend \"time\"=todatetime(\"time\")",
@@ -227,7 +248,7 @@
           "type": "json",
           "source": "url",
           "format": "timeseries",
-          "url": "https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&daily=sunrise,sunset&forecast_days=7&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
           "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.wind_speed_10m, hourly.wind_direction_10m).{ 'time': $[0], 'wind_speed': $[1], 'wind_direction': $[2] }\"\n| extend \"time\"=todatetime(\"time\")",
@@ -247,6 +268,6 @@
   "timezone": "",
   "title": "Weather Forecast (Open-Meteo, 7-day hourly)",
   "uid": "openmeteo-weather",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }

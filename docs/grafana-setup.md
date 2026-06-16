@@ -18,12 +18,8 @@ hand** (to understand the query). Both use the same datasource.
 
 ## 2. Add the datasource
 
-**Via UI:** *Connections → Data sources → Add → Infinity*. Name it **`Open-Meteo Cache`**.
+*Connections → Data sources → Add → Infinity*. Name it **`Open-Meteo Cache`**.
 No auth is required. Save & test.
-
-**Via provisioning (self-hosted):** copy
-[`../grafana/provisioning/datasources/infinity.yaml`](../grafana/provisioning/datasources/infinity.yaml)
-into Grafana's `provisioning/datasources/` directory and restart.
 
 > If you put an Access List in front of the cache in NPM, set the matching
 > Basic Auth / header on the datasource here.
@@ -50,10 +46,11 @@ New panel → **Time series** → datasource **Open-Meteo Cache**, then:
 | Format  | `Time series` |
 | Parser  | `UQL`     |
 
-**URL** (one call returns every variable; all panels can reuse it → one shared cache entry):
+**URL** (one call returns every variable — plus `daily=sunrise,sunset` for the day/night
+shading below; all panels *and* the annotation reuse it → one shared cache entry):
 
 ```
-https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT
+https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&daily=sunrise,sunset&forecast_days=7&timezone=GMT
 ```
 
 **UQL** — pick the projection for the metric you want:
@@ -102,6 +99,33 @@ parse-json
 - `extend "time"=todatetime("time")` types the time column so Grafana plots it on the X axis.
 
 > UQL has no native `zip`; the embedded `jsonata` command + JSONata `$zip` is the supported way.
+
+### Day/night shading (Daylight annotation)
+
+The dashboard shades each day's **sunrise→sunset** span as a soft amber band across *all*
+panels, so you can tell at a glance which part of the 7‑day window is daytime. Nights are
+just the un‑shaded (dark) background.
+
+It's a **dashboard annotation**, not a panel query — Grafana draws a region wherever an
+annotation row carries both `time` and `timeEnd`. The query uses the same Open-Meteo URL
+(it already requests `daily=sunrise,sunset`) and the same `$zip` pivot. To build it by hand:
+*Dashboard settings → Annotations → New*, datasource **Open-Meteo Cache**, then a `JSON` /
+`URL` / `Table` query with:
+
+```
+parse-json
+| jsonata "$zip(daily.sunrise, daily.sunset).{ 'time': $[0], 'timeEnd': $[1], 'text': 'Daylight' }"
+| extend "time"=todatetime("time")
+| extend "timeEnd"=todatetime("timeEnd")
+```
+
+- Each daily `sunrise[i]`/`sunset[i]` shares an index, so a plain `$zip` yields one daylight
+  region per day — no array math needed.
+- The band colour/intensity is the annotation's **icon colour**; a low alpha (e.g.
+  `rgba(255, 193, 7, 0.18)`) keeps it subtle. The annotation is toggleable from the control
+  in the dashboard's top bar.
+- Because the URL uses `timezone=GMT` (like the panels), the bands resolve to the same
+  absolute instants as the series and line up under the curves in any display timezone.
 
 ### Set the panel time range
 
