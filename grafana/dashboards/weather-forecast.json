@@ -71,12 +71,12 @@
               { "id": "custom.drawStyle", "value": "line" },
               { "id": "custom.lineInterpolation", "value": "stepAfter" },
               { "id": "custom.lineWidth", "value": 0 },
-              { "id": "custom.fillOpacity", "value": 20 },
+              { "id": "custom.fillOpacity", "value": 35 },
               { "id": "custom.stacking", "value": { "mode": "none", "group": "A" } },
               { "id": "custom.axisPlacement", "value": "hidden" },
               { "id": "custom.axisLabel", "value": "night" },
               { "id": "custom.hideFrom", "value": { "tooltip": true, "legend": true, "viz": false } },
-              { "id": "color", "value": { "mode": "fixed", "fixedColor": "rgba(40, 52, 90, 1)" } },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "rgba(74, 95, 168, 1)" } },
               { "id": "min", "value": 0 },
               { "id": "max", "value": 1 }
             ]
@@ -149,12 +149,12 @@
               { "id": "custom.drawStyle", "value": "line" },
               { "id": "custom.lineInterpolation", "value": "stepAfter" },
               { "id": "custom.lineWidth", "value": 0 },
-              { "id": "custom.fillOpacity", "value": 20 },
+              { "id": "custom.fillOpacity", "value": 35 },
               { "id": "custom.stacking", "value": { "mode": "none", "group": "A" } },
               { "id": "custom.axisPlacement", "value": "hidden" },
               { "id": "custom.axisLabel", "value": "night" },
               { "id": "custom.hideFrom", "value": { "tooltip": true, "legend": true, "viz": false } },
-              { "id": "color", "value": { "mode": "fixed", "fixedColor": "rgba(40, 52, 90, 1)" } },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "rgba(74, 95, 168, 1)" } },
               { "id": "min", "value": 0 },
               { "id": "max", "value": 1 }
             ]
@@ -225,12 +225,12 @@
               { "id": "custom.drawStyle", "value": "line" },
               { "id": "custom.lineInterpolation", "value": "stepAfter" },
               { "id": "custom.lineWidth", "value": 0 },
-              { "id": "custom.fillOpacity", "value": 20 },
+              { "id": "custom.fillOpacity", "value": 35 },
               { "id": "custom.stacking", "value": { "mode": "none", "group": "A" } },
               { "id": "custom.axisPlacement", "value": "hidden" },
               { "id": "custom.axisLabel", "value": "night" },
               { "id": "custom.hideFrom", "value": { "tooltip": true, "legend": true, "viz": false } },
-              { "id": "color", "value": { "mode": "fixed", "fixedColor": "rgba(40, 52, 90, 1)" } },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "rgba(74, 95, 168, 1)" } },
               { "id": "min", "value": 0 },
               { "id": "max", "value": 1 }
             ]
@@ -308,12 +308,12 @@
               { "id": "custom.drawStyle", "value": "line" },
               { "id": "custom.lineInterpolation", "value": "stepAfter" },
               { "id": "custom.lineWidth", "value": 0 },
-              { "id": "custom.fillOpacity", "value": 20 },
+              { "id": "custom.fillOpacity", "value": 35 },
               { "id": "custom.stacking", "value": { "mode": "none", "group": "A" } },
               { "id": "custom.axisPlacement", "value": "hidden" },
               { "id": "custom.axisLabel", "value": "night" },
               { "id": "custom.hideFrom", "value": { "tooltip": true, "legend": true, "viz": false } },
-              { "id": "color", "value": { "mode": "fixed", "fixedColor": "rgba(40, 52, 90, 1)" } },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "rgba(74, 95, 168, 1)" } },
               { "id": "min", "value": 0 },
               { "id": "max", "value": 1 }
             ]
