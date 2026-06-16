@@ -46,11 +46,11 @@ New panel → **Time series** → datasource **Open-Meteo Cache**, then:
 | Format  | `Time series` |
 | Parser  | `UQL`     |
 
-**URL** (one call returns every variable — plus `daily=sunrise,sunset` for the day/night
-shading below; all panels *and* the annotation reuse it → one shared cache entry):
+**URL** (one call returns every variable — plus `is_day` for the in-panel day/night
+shading below; every panel target reuses it → one shared cache entry):
 
 ```
-https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&daily=sunrise,sunset&forecast_days=7&timezone=GMT
+https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m,is_day&forecast_days=7&timezone=GMT
 ```
 
 **UQL** — pick the projection for the metric you want:
@@ -100,32 +100,49 @@ parse-json
 
 > UQL has no native `zip`; the embedded `jsonata` command + JSONata `$zip` is the supported way.
 
-### Day/night shading (Daylight annotation)
+### Day/night shading (in-panel `is_day` band)
 
-The dashboard shades each day's **sunrise→sunset** span as a soft amber band across *all*
-panels, so you can tell at a glance which part of the 7‑day window is daytime. Nights are
-just the un‑shaded (dark) background.
+Each panel shades **night** hours as a soft translucent band, so you can tell at a glance which
+part of the 7-day window is daytime. It's drawn **inside every panel as an extra series**, not
+as a dashboard annotation: Grafana's native public/shared dashboards only render annotations
+that query the built-in `-- Grafana --` data source, so a datasource-backed annotation (what
+this used to be) silently vanishes on a public link. A panel series renders everywhere — public
+included.
 
-It's a **dashboard annotation**, not a panel query — Grafana draws a region wherever an
-annotation row carries both `time` and `timeEnd`. The query uses the same Open-Meteo URL
-(it already requests `daily=sunrise,sunset`) and the same `$zip` pivot. To build it by hand:
-*Dashboard settings → Annotations → New*, datasource **Open-Meteo Cache**, then a `JSON` /
-`URL` / `Table` query with:
+Each panel carries a second target (`refId: Shade`) that reuses the same forecast URL and pivots
+Open-Meteo's per-hour `is_day` flag (0 = night, 1 = day) into a `night` series:
 
 ```
 parse-json
-| jsonata "$zip(daily.sunrise, daily.sunset).{ 'time': $[0], 'timeEnd': $[1], 'text': 'Daylight' }"
+| jsonata "$zip(hourly.time, hourly.is_day).{ 'time': $[0], 'night': 1 - $[1] }"
 | extend "time"=todatetime("time")
-| extend "timeEnd"=todatetime("timeEnd")
 ```
 
-- Each daily `sunrise[i]`/`sunset[i]` shares an index, so a plain `$zip` yields one daylight
-  region per day — no array math needed.
-- The band colour/intensity is the annotation's **icon colour**; a low alpha (e.g.
-  `rgba(255, 193, 7, 0.18)`) keeps it subtle. The annotation is toggleable from the control
-  in the dashboard's top bar.
-- Because the URL uses `timezone=GMT` (like the panels), the bands resolve to the same
-  absolute instants as the series and line up under the curves in any display timezone.
+A field override on the `night` series turns it into the background band — *Panel → Overrides →
+Fields with name `night`*:
+
+| Setting                      | Value                                     |
+|------------------------------|-------------------------------------------|
+| Graph styles → Style         | Line                                      |
+| Line interpolation           | Step after                                |
+| Line width                   | `0`                                       |
+| Fill opacity                 | `20`                                      |
+| Standard options → Min / Max | `0` / `1`                                 |
+| Axis → Placement             | Hidden                                    |
+| Axis → Label                 | `night`                                   |
+| Color scheme                 | Single color (e.g. `rgba(40, 52, 90, 1)`) |
+| Hide in tooltip & legend     | on                                        |
+
+- `min:0 / max:1` plus the dedicated hidden axis (the distinct **axis label** forces its own
+  scale) make a value of `1` fill the **full plot height** without rescaling the real
+  temperature/precip/etc. axis. The stepped line + fill draws solid, contiguous bands.
+- The `Shade` target is listed **first** in each panel so the band draws *behind* the data.
+- Bands snap to **hour boundaries** (Open-Meteo's hourly granularity) rather than the exact
+  sunrise/sunset minute — a small fidelity trade for working on public dashboards.
+- Because the URL uses `timezone=GMT` (like the metric series), the bands resolve to the same
+  absolute instants and line up under the curves in any display timezone.
+- To shade **daytime** in amber instead, project `'day': $[1]` and pick an amber colour such as
+  `rgba(255, 193, 7, 1)`.
 
 ### Set the panel time range
 

@@ -62,7 +62,7 @@ The response carries an `X-Cache-Status` header (`MISS`, `HIT`, `STALE`, `UPDATI
 `EXPIRED`). With `ports: ["8080:8080"]` temporarily enabled:
 
 ```bash
-URL='http://localhost:8080/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT'
+URL='http://localhost:8080/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m,is_day&forecast_days=7&timezone=GMT'
 
 curl -s -D - "$URL" -o /dev/null | grep -i x-cache-status   # MISS (first time)
 curl -s -D - "$URL" -o /dev/null | grep -i x-cache-status   # HIT

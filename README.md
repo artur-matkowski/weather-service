@@ -54,7 +54,7 @@ Uncomment the `ports: ["8080:8080"]` block in `docker-compose.yml`, `docker comp
 ```bash
 curl -s http://localhost:8080/health   # -> ok
 
-URL='http://localhost:8080/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&forecast_days=7&timezone=GMT'
+URL='http://localhost:8080/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m,is_day&forecast_days=7&timezone=GMT'
 curl -s -D - "$URL" -o /dev/null | grep -i x-cache-status   # 1st request -> MISS
 curl -s -D - "$URL" -o /dev/null | grep -i x-cache-status   # 2nd request -> HIT
 ```
