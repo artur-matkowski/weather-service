@@ -415,7 +415,7 @@
           "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
-          "uql": "parse-json\n| jsonata \"{ 'temperature': current.temperature_2m }\"",
+          "uql": "parse-json\n| jsonata \"[{ 'temperature': current.temperature_2m }]\"",
           "root_selector": "",
           "columns": [],
           "filters": []
@@ -462,7 +462,7 @@
           "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
-          "uql": "parse-json\n| jsonata \"{ 'rain (mm)': current.rain, 'snow (cm)': current.snowfall }\"",
+          "uql": "parse-json\n| jsonata \"[{ 'rain (mm)': current.rain, 'snow (cm)': current.snowfall }]\"",
           "root_selector": "",
           "columns": [],
           "filters": []
@@ -512,7 +512,7 @@
           "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
-          "uql": "parse-json\n| jsonata \"{ 'clouds': current.cloud_cover }\"",
+          "uql": "parse-json\n| jsonata \"[{ 'clouds': current.cloud_cover }]\"",
           "root_selector": "",
           "columns": [],
           "filters": []
@@ -562,7 +562,7 @@
           "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
-          "uql": "parse-json\n| jsonata \"{ 'wind_speed': current.wind_speed_10m }\"",
+          "uql": "parse-json\n| jsonata \"[{ 'wind_speed': current.wind_speed_10m }]\"",
           "root_selector": "",
           "columns": [],
           "filters": []
@@ -604,7 +604,7 @@
           "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
-          "uql": "parse-json\n| jsonata \"{ 'direction': ($d := current.wind_direction_10m; $d < 22.5 ? '↑ N' : $d < 67.5 ? '↗ NE' : $d < 112.5 ? '→ E' : $d < 157.5 ? '↘ SE' : $d < 202.5 ? '↓ S' : $d < 247.5 ? '↙ SW' : $d < 292.5 ? '← W' : $d < 337.5 ? '↖ NW' : '↑ N') }\"",
+          "uql": "parse-json\n| jsonata \"[{ 'direction': ($d := current.wind_direction_10m; $d < 22.5 ? '↑ N' : $d < 67.5 ? '↗ NE' : $d < 112.5 ? '→ E' : $d < 157.5 ? '↘ SE' : $d < 202.5 ? '↓ S' : $d < 247.5 ? '↙ SW' : $d < 292.5 ? '← W' : $d < 337.5 ? '↖ NW' : '↑ N') }]\"",
           "root_selector": "",
           "columns": [],
           "filters": []
