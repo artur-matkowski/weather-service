@@ -577,28 +577,8 @@
           "custom": {
             "hideFrom": { "tooltip": false, "viz": false, "legend": false }
           },
-          "mappings": [
-            {
-              "type": "value",
-              "options": {
-                "1": { "text": "↑ N", "color": "text" }
-              }
-            },
-            {
-              "type": "range",
-              "options": {
-                "0": { "text": "↑ N", "color": "text" },
-                "22.5": { "text": "↗ NE", "color": "text" },
-                "67.5": { "text": "→ E", "color": "text" },
-                "112.5": { "text": "↘ SE", "color": "text" },
-                "157.5": { "text": "↓ S", "color": "text" },
-                "202.5": { "text": "↙ SW", "color": "text" },
-                "247.5": { "text": "← W", "color": "text" },
-                "292.5": { "text": "↖ NW", "color": "text" }
-              }
-            }
-          ],
-          "unit": "degree"
+          "mappings": [],
+          "unit": "short"
         },
         "overrides": []
       },
@@ -624,7 +604,7 @@
           "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
-          "uql": "parse-json\n| jsonata \"[{ 'direction': current.wind_direction_10m }]\"",
+          "uql": "parse-json\n| jsonata \"[{ 'direction': (\n  $d := current.wind_direction_10m;\n  $d < 22.5 ? '↑ N' :\n  $d < 67.5 ? '↗ NE' :\n  $d < 112.5 ? '→ E' :\n  $d < 157.5 ? '↘ SE' :\n  $d < 202.5 ? '↓ S' :\n  $d < 247.5 ? '↙ SW' :\n  $d < 292.5 ? '← W' :\n  $d < 337.5 ? '↖ NW' :\n  '↑ N'\n) }]\"",
           "root_selector": "",
           "columns": [],
           "filters": []
