@@ -27,6 +27,18 @@
       "id": "timeseries",
       "name": "Time series",
       "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
     }
   ],
   "annotations": {
@@ -83,7 +95,7 @@
           }
         ]
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
       "id": 1,
       "options": {
         "legend": { "calcs": ["min", "max", "mean"], "displayMode": "table", "placement": "bottom", "showLegend": true },
@@ -161,7 +173,7 @@
           }
         ]
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
       "id": 2,
       "options": {
         "legend": { "calcs": ["sum", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
@@ -237,7 +249,7 @@
           }
         ]
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
       "id": 3,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
@@ -320,7 +332,7 @@
           }
         ]
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
       "id": 4,
       "options": {
         "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
@@ -353,6 +365,266 @@
           "url_options": { "method": "GET", "data": "" },
           "parser": "uql",
           "uql": "parse-json\n| jsonata \"$zip(hourly.time, hourly.wind_speed_10m, hourly.wind_direction_10m).{ 'time': $[0], 'wind_speed': $[1], 'wind_direction': $[2] }\"\n| extend \"time\"=todatetime(\"time\")",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "max": 40,
+          "min": -20,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "light-blue", "value": 0 },
+              { "color": "green", "value": 20 },
+              { "color": "orange", "value": 30 },
+              { "color": "red", "value": 35 }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+      "id": 5,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": { "values": false, "fields": "", "calcs": ["lastNotNull"] },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "10.0.0",
+      "type": "gauge",
+      "title": "Temperature now",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"[{ 'temperature': current.temperature_2m }]\"",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "hideFrom": { "tooltip": false, "viz": false, "legend": false }
+          },
+          "mappings": [],
+          "unit": "lengthmm"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "snow (cm)" },
+            "properties": [{ "id": "unit", "value": "lengthcm" }]
+          }
+        ]
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+      "id": 6,
+      "options": {
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": { "values": false, "fields": "", "calcs": ["lastNotNull"] }
+      },
+      "pluginVersion": "10.0.0",
+      "type": "stat",
+      "title": "Precipitation now",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"[{ 'rain (mm)': current.rain, 'snow (cm)': current.snowfall }]\"",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "green", "value": 25 },
+              { "color": "yellow", "value": 60 },
+              { "color": "grey", "value": 85 }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+      "id": 7,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": { "values": false, "fields": "", "calcs": ["lastNotNull"] },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "10.0.0",
+      "type": "gauge",
+      "title": "Cloud cover now",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"[{ 'clouds': current.cloud_cover }]\"",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "max": 80,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 20 },
+              { "color": "orange", "value": 40 },
+              { "color": "red", "value": 60 }
+            ]
+          },
+          "unit": "velocitykmh"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 18, "y": 1 },
+      "id": 8,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": { "values": false, "fields": "", "calcs": ["lastNotNull"] },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "10.0.0",
+      "type": "gauge",
+      "title": "Wind speed now",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"[{ 'wind_speed': current.wind_speed_10m }]\"",
+          "root_selector": "",
+          "columns": [],
+          "filters": []
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "hideFrom": { "tooltip": false, "viz": false, "legend": false }
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "1": { "text": "↑ N", "color": "text" }
+              }
+            },
+            {
+              "type": "range",
+              "options": {
+                "0": { "text": "↑ N", "color": "text" },
+                "22.5": { "text": "↗ NE", "color": "text" },
+                "67.5": { "text": "→ E", "color": "text" },
+                "112.5": { "text": "↘ SE", "color": "text" },
+                "157.5": { "text": "↓ S", "color": "text" },
+                "202.5": { "text": "↙ SW", "color": "text" },
+                "247.5": { "text": "← W", "color": "text" },
+                "292.5": { "text": "↖ NW", "color": "text" }
+              }
+            }
+          ],
+          "unit": "degree"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 2, "x": 22, "y": 1 },
+      "id": 9,
+      "options": {
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": { "values": false, "fields": "", "calcs": ["lastNotNull"] }
+      },
+      "pluginVersion": "10.0.0",
+      "type": "stat",
+      "title": "Wind dir now",
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "${DS_OPENMETEO}" },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "url": "https://openmeteo-cache.bitforge.pl/v1/forecast?latitude=52.52&longitude=13.405&current=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=GMT",
+          "url_options": { "method": "GET", "data": "" },
+          "parser": "uql",
+          "uql": "parse-json\n| jsonata \"[{ 'direction': current.wind_direction_10m }]\"",
           "root_selector": "",
           "columns": [],
           "filters": []
