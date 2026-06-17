@@ -589,7 +589,7 @@
         "textMode": "auto",
         "colorMode": "value",
         "graphMode": "none",
-        "reduceOptions": { "values": false, "fields": "", "calcs": ["lastNotNull"] }
+        "reduceOptions": { "values": true, "fields": "/.*/", "limit": 1, "calcs": [] }
       },
       "pluginVersion": "10.0.0",
       "type": "stat",
