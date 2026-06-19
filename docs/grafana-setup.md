@@ -26,6 +26,16 @@ No auth is required. Save & test.
 
 ## 3a. Import the dashboard (recommended)
 
+First **generate** the dashboard JSON for your location (it's rendered from `.env`, so the
+query URLs carry your coordinates and public host):
+
+```bash
+cp .env.example .env       # then set LATITUDE / LONGITUDE / PUBLIC_HOST
+./scripts/build-dashboard.sh
+```
+
+That writes `grafana/dashboards/weather-forecast.json` (gitignored). Then in Grafana:
+
 *Dashboards → New → Import → Upload JSON file* →
 [`../grafana/dashboards/weather-forecast.json`](../grafana/dashboards/weather-forecast.json).
 When prompted, pick the **Open-Meteo Cache** datasource. Done — four panels (temperature,
@@ -47,7 +57,9 @@ New panel → **Time series** → datasource **Open-Meteo Cache**, then:
 | Parser  | `UQL`     |
 
 **URL** (one call returns every variable — plus `is_day` for the in-panel day/night
-shading below; every panel target reuses it → one shared cache entry):
+shading below; every panel target reuses it → one shared cache entry). The host and
+coordinates below are illustrative — your real values come from `.env` via
+`scripts/build-dashboard.sh`:
 
 ```
 https://weather.example.com/v1/forecast?latitude=52.52&longitude=13.405&hourly=temperature_2m,rain,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m,is_day&forecast_days=7&timezone=GMT
